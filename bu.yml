@@ -1,0 +1,36 @@
+---
+use:
+  - mina/rails
+
+hosts:
+  production:
+    - host: rsc@127.0.0.1
+      deploy_to: /var/www/myapp
+      git: https://github.com/me/myapp
+      rails_env: production
+      shared_paths:
+        - config/database.yml
+        - config/settings.yml
+        - public
+        - logs
+
+tasks:
+  deploy:
+    - command: git clone
+      desc: Fetching new commits
+      dir: /boo/boo
+    - command: bundle install
+      desc: Bundle install
+      sudo: yes
+      dir: /boo/boo
+    - command: nanoc compile
+      desc:
+      dir: /boo/boo
+    - command: nanoc deploy
+      desc:
+      dir: /boo/boo
+
+  clean:
+    - command: |
+      rm -rf {{deploy_to}}/shared/public/assets &&
+      rm -rf {{deploy_to}}/shared/logs/*
